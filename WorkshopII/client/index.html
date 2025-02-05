@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Week 1 - Consume API</title>
+  <script>
+    const completed = (e) => {
+      const data = JSON.parse(e.target.responseText);
+      const currencyType = e.target.selectedCurrency;
+      
+      const compraKey = currencyType === 'usd' ? 'TipoCompraDolares' : 'TipoCompraEuros';
+      const ventaKey = currencyType === 'usd' ? 'TipoVentaDolares' : 'TipoVentaEuros';
+
+      document.getElementById('result').innerHTML = `
+        Tipo de Cambio Compra (${currencyType.toUpperCase()}): ${data[compraKey]}<br>
+        Tipo de Cambio Venta (${currencyType.toUpperCase()}): ${data[ventaKey]}
+      `;
+    };
+
+    const error = () => console.log(this.responseText);
+
+    function getExchangeRate() {
+      const currencySelect = document.getElementById('currencySelect');
+      const selectedCurrency = currencySelect.value;
+      
+      const ajaxRequest = new XMLHttpRequest();
+      ajaxRequest.addEventListener("load", completed);
+      ajaxRequest.addEventListener("error", error);
+      ajaxRequest.open("GET", `http://localhost:3000/tipocambio?type=${selectedCurrency}`);
+      ajaxRequest.selectedCurrency = selectedCurrency;  
+      ajaxRequest.send();
+    }
+  </script>
+</head>
+
+<body>
+  <select id="currencySelect" onchange="getExchangeRate()">
+    <option value="usd">USD</option>
+    <option value="eur">EUR</option>
+  </select>
+
+  <h3>Results:</h3>
+  <div id="result"></div>
+</body>
+
+</html>
