@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Crear Profesor</title>
+  <script>
+    const error = (e) => console.log(e.target.responseText);
+
+    function createTeacher() {
+      const teacher = {
+        first_name: document.getElementById("first_name").value,
+        last_name: document.getElementById("last_name").value,
+        cedula: document.getElementById("cedula").value,
+        age: document.getElementById("age").value
+      };
+
+      const ajaxRequest = new XMLHttpRequest();
+      ajaxRequest.addEventListener("load", function (e) {
+        document.getElementById('result').innerHTML = 'Profesor creado exitosamente';
+      });
+      ajaxRequest.addEventListener("error", error);
+      ajaxRequest.open("POST", "http://localhost:3000/api/createteachers");
+      ajaxRequest.setRequestHeader("Content-Type", "application/json");
+      ajaxRequest.send(JSON.stringify(teacher));
+    }
+  </script>
+</head>
+
+<body>
+  <h3>Crear un Nuevo Profesor</h3>
+  <button onclick="window.location.href='index.html';">Volver</button>
+
+  <form onsubmit="event.preventDefault(); createTeacher();">
+    <label for="first_name">First Name:</label>
+    <input type="text" id="first_name" required><br>
+    
+    <label for="last_name">Last Name:</label>
+    <input type="text" id="last_name" required><br>
+    
+    <label for="cedula">Cedula:</label>
+    <input type="text" id="cedula" required><br>
+    
+    <label for="age">Age:</label>
+    <input type="number" id="age" required><br><br>
+    
+    <button type="submit">Crear Profesor</button>
+  </form>
+
+  <div id="result"></div>
+</body>
+
+</html>

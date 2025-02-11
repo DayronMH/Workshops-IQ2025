@@ -1,34 +1,17 @@
 const express = require('express');
 const router = express.Router();
-const User = require('../model/model.js'); 
+const {
+  teacherGetAll,
+  teacherGetOne,
+  teacherPost,
+  teacherPatch,
+  teacherDelete
+} = require('../server/controllers/teacherController');
 
-router.post('/users', async (req, res) => {
-    const user = new User({
-        name: req.body.name,
-        email: req.body.email
-    });
-
-    try {
-        const newUser = await user.save();
-        res.status(201).json(newUser); 
-    } catch (error) {
-        res.status(400).json({ message: error.message });
-    }
-});
-
-router.get('/getAll', (req, res) => {
-    res.send('Get All API')
-})
-
-router.get('/getOne/:id', (req, res) => {
-    res.send(req.params.id)
-})
-
-router.patch('/update/:id', (req, res) => {
-    res.send('Update by ID API')
-})
-router.delete('/delete/:id', (req, res) => {
-    res.send('Delete by ID API')
-})
+router.post('/createteachers', teacherPost);
+router.get('/getAll', teacherGetAll);
+router.get('/getOne/:id', teacherGetOne);
+router.put('/update/:id', teacherPatch);
+router.delete('/delete/:id', teacherDelete);
 
 module.exports = router;
