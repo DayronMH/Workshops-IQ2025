@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Show Teachers</title>
+</head>
+<body>
+    <h1>List of Teachers</h1>
+
+    <table id="teachersTable" border="1">
+        <thead>
+            <tr>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Cedula</th>
+                <th>Age</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+
+    <script>
+        fetch('http://localhost:3000/api/getAll')
+            .then(response => response.json())
+            .then(teachers => {
+                const teachersTable = document.querySelector('#teachersTable tbody');
+                teachers.forEach(teacher => {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td>${teacher.first_name}</td>
+                        <td>${teacher.last_name}</td>
+                        <td>${teacher.cedula}</td>
+                        <td>${teacher.age}</td>
+                    `;
+                    teachersTable.appendChild(row);
+                });
+            })
+            .catch(error => {
+                console.error('Error al obtener los datos:', error);
+            });
+    </script>
+    <button onclick="window.location.href='index.html';">Salir</button>
+
+</body>
+</html>
