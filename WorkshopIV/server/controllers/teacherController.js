@@ -1,7 +1,7 @@
 const Teacher = require('../models/teacherModel'); // Modelo de Teacher
 
-// Obtener todos los teachers
-const teacherGetAll = async (req, res) => {
+
+const GetAllTeachers= async (req, res) => {
   try {
     const teachers = await Teacher.find();
     res.json(teachers);
@@ -10,21 +10,8 @@ const teacherGetAll = async (req, res) => {
   }
 };
 
-// Obtener un teacher por ID
-const teacherGetOne = async (req, res) => {
-  try {
-    const teacher = await Teacher.findById(req.params.id);
-    if (!teacher) {
-      return res.status(404).json({ message: 'Teacher not found' });
-    }
-    res.json(teacher);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
 
-// Crear un nuevo teacher
-const teacherPost = async (req, res) => {
+const PostTeacher = async (req, res) => {
   try {
     const teacher = new Teacher({
       first_name: req.body.first_name,
@@ -40,7 +27,7 @@ const teacherPost = async (req, res) => {
 };
 
 // Actualizar un teacher
-const teacherPatch = async (req, res) => {
+const PatchTeacher = async (req, res) => {
   try {
     const teacher = await Teacher.findById(req.params.id);
     if (!teacher) {
@@ -59,8 +46,7 @@ const teacherPatch = async (req, res) => {
   }
 };
 
-// Eliminar un teacher
-const teacherDelete = async (req, res) => {
+const DeleteTeacher = async (req, res) => {
   try {
     const teacher = await Teacher.findByIdAndDelete(req.params.id);
     if (!teacher) {
@@ -73,9 +59,8 @@ const teacherDelete = async (req, res) => {
 };
 
 module.exports = {
-  teacherGetAll,
-  teacherGetOne,
-  teacherPost,
-  teacherPatch,
-  teacherDelete
+  GetAllTeachers,
+  PostTeacher,
+  PatchTeacher,
+  DeleteTeacher
 };
