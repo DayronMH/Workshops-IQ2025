@@ -78,7 +78,7 @@ export const deleteCourse = async (id) => {
     throw error;
   }
 };
-export const getEnrrollments = async () => {
+export const getEnrollments = async () => {
   try {
     const response = await api.get('/getEnrollments');
     return response.data;

@@ -8,11 +8,10 @@ document.addEventListener('DOMContentLoaded', () => {
 const enrollmentForm = document.getElementById('enrollmentForm');
 const enrollmentsTableBody = document.getElementById('enrollmentsTableBody');
 const resultDiv = document.getElementById('result');
-const submitBtn = document.getElementById('submitBtn');
+const submitBtn = document.getElementById('submit');
 const cancelBtn = document.getElementById('cancelBtn');
 const courseSelect = document.getElementById('course');
 const teacherSelect = document.getElementById('teacher');
-
 
 async function loadEnrollments() {
     try {
@@ -48,13 +47,24 @@ courseSelect.addEventListener('change', async () => {
 
     try {
         const teachers = await api.getTeachers();
-        const filteredTeachers = teachers.filter(t => t.specialty === selectedCourseId);
+        const selectedCourse = await api.getCourses().then(courses => courses.find(course => course._id === selectedCourseId));
+        if (!selectedCourse) return;
+
+        const filteredTeachers = teachers.filter(t => t.specialty === selectedCourse.name);
+
         filteredTeachers.forEach(teacher => {
             const option = document.createElement('option');
             option.value = teacher._id;
-            option.textContent = teacher.last_name;
+            option.textContent = `${teacher.first_name} ${teacher.last_name}`;
             teacherSelect.appendChild(option);
         });
+
+        if (filteredTeachers.length === 0) {
+            const option = document.createElement('option');
+            option.value = '';
+            option.textContent = 'No hay profesores disponibles';
+            teacherSelect.appendChild(option);
+        }
     } catch (error) {
         showMessage('Error al cargar profesores', 'error');
     }
@@ -142,7 +152,7 @@ function renderEnrollmentsTable(enrollments) {
         row.innerHTML = `
             <td>${enrollment.student}</td>
             <td>${enrollment.course.name}</td>
-            <td>${enrollment.teacher.last_name}</td>
+            <td>${enrollment.teacher.first_name} ${enrollment.teacher.last_name}</td>
             <td>
                 <button onclick="editEnrollment('${enrollment._id}')">Editar</button>
                 <button onclick="confirmDeleteEnrollment('${enrollment._id}')">Eliminar</button>
