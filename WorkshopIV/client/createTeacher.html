@@ -1,54 +1,77 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Crear Profesor</title>
-  <script>
-    const error = (e) => console.log(e.target.responseText);
-
-    function createTeacher() {
-      const teacher = {
-        first_name: document.getElementById("first_name").value,
-        last_name: document.getElementById("last_name").value,
-        cedula: document.getElementById("cedula").value,
-        age: document.getElementById("age").value
-      };
-
-      const ajaxRequest = new XMLHttpRequest();
-      ajaxRequest.addEventListener("load", function (e) {
-        document.getElementById('result').innerHTML = 'Profesor creado exitosamente';
-      });
-      ajaxRequest.addEventListener("error", error);
-      ajaxRequest.open("POST", "http://localhost:3000/api/createteachers");
-      ajaxRequest.setRequestHeader("Content-Type", "application/json");
-      ajaxRequest.send(JSON.stringify(teacher));
-    }
-  </script>
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+<script type="module" src="./public/js/teacher.js"></script>
+  <link rel="stylesheet" href="./public/css/teacher.css">
+  <title>Gestión de Profesores</title>
 </head>
-
 <body>
-  <h3>Crear un Nuevo Profesor</h3>
-  <button onclick="window.location.href='index.html';">Volver</button>
-
-  <form onsubmit="event.preventDefault(); createTeacher();">
-    <label for="first_name">First Name:</label>
-    <input type="text" id="first_name" required><br>
+  <h1>Sistema de Gestión de Profesores</h1>
+  <button onclick="window.location.href='index.html'">Volver al Inicio</button>
+  
+  <div class="container">
+    <div class="form-container">
+      <h3>Crear un Nuevo Profesor</h3>
+      <form id="teacherForm">
+        <div class="form-group">
+          <label for="first_name">Nombre:</label>
+          <input type="text" id="first_name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="last_name">Apellido:</label>
+          <input type="text" id="last_name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="cedula">Cédula:</label>
+          <input type="text" id="cedula" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="age">Edad:</label>
+          <input type="number" id="age" min="18" max="100" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="specialty">Especialidad:</label>
+          <input type="text" id="specialty" required>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit" id="submitBtn">Crear Profesor</button>
+          <button type="button" id="cancelBtn" style="display:none" onclick="cancelEdit()">Cancelar</button>
+        </div>
+      </form>
+      
+      <div id="result" class="message"></div>
+    </div>
     
-    <label for="last_name">Last Name:</label>
-    <input type="text" id="last_name" required><br>
-    
-    <label for="cedula">Cedula:</label>
-    <input type="text" id="cedula" required><br>
-    
-    <label for="age">Age:</label>
-    <input type="number" id="age" required><br><br>
-    
-    <button type="submit">Crear Profesor</button>
-  </form>
-
-  <div id="result"></div>
+    <div class="table-container">
+      <h3>Lista de Profesores</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Cédula</th>
+            <th>Edad</th>
+            <th>Especialidad</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="teachersTableBody">
+          <tr>
+            <td colspan="6" class="loading-message">Cargando profesores...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+ 
 </body>
-
 </html>

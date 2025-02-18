@@ -1,61 +1,50 @@
-const Course = require('../models/coursesModel'); 
+const asyncHandler = require('express-async-handler');
+const courseService = require('../services/courseServices');
 
-const GetAllCourses = async (req, res) => {
-  try {
-    const courses = await Course.find();
-    res.json(courses);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
+const GetAllCourses = asyncHandler(async (req, res) => {
+  const courses = await courseService.GetAllCourses();
+  res.status(200).json(courses);
+});
+
+const CreateCourse = asyncHandler(async (req, res) => {
+  const { name, credits, teacher } = req.body;
+
+  if (!name || !credits) {
+    res.status(400);
+    throw new Error('Los campos "name" y "credits" son requeridos');
   }
-};
 
-// Crear un nuevo curso
-const PostCourse = async (req, res) => {
+  const courseData = { name, credits, teacher };
+  const newCourse = await courseService.CreateCourse(courseData);
+  res.status(201).json(newCourse);
+});
+
+const UpdateCourse = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  const updateData = req.body;
+
   try {
-    const course = new Course({
-      name: req.body.name,
-      credits: req.body.credits
-    });
-    const newCourse = await course.save();
-    res.status(201).json(newCourse);
+    const updatedCourse = await courseService.UpdateCourse(id, updateData);
+    res.status(200).json(updatedCourse);
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(404).json({ message: error.message });
   }
-};
+});
 
-const PatchCourse = async (req, res) => {
+const DeleteCourse = asyncHandler(async (req, res) => {
+  const { id } = req.params;
+  
   try {
-    const course = await Course.findById(req.params.id);
-    if (!course) {
-      return res.status(404).json({ message: 'Teacher not found' });
-    }
-
-    course.name = req.body.name || teacher.name;
-    course.credits = req.body.credits|| teacher.credits;
-    course.teacher = req.body.teacher || teacher.teacher;
-
-    const updatedCourse = await course.save();
-    res.json(updatedCourse);
+    await courseService.DeleteCourse(id);
+    res.status(204).send();
   } catch (error) {
-    res.status(400).json({ message: error.message });
+    res.status(404).json({ message: error.message });
   }
-};
-
-const DeleteCourse = async (req, res) => {
-  try {
-    const course = await Course.findByIdAndDelete(req.params.id);
-    if (!course) {
-      return res.status(404).json({ message: 'Course not found' });
-    }
-    res.status(204);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+});
 
 module.exports = {
   GetAllCourses,
-  PostCourse,
-  PatchCourse,
+  CreateCourse,
+  UpdateCourse,
   DeleteCourse
 };

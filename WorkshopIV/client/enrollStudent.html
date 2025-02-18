@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+  <script type="module" src="./public/js/enrollment.js"></script>
+  <link rel="stylesheet" href="./public/css/teacher.css">
+  <title>Gestión de Matrículas</title>
+</head>
+<body>
+  <h1>Sistema de Gestión de Matrículas</h1>
+  <button onclick="window.location.href='index.html'">Volver al Inicio</button>
+  
+  <div class="container">
+    <div class="form-container">
+      <h3>Registrar Nueva Matrícula</h3>
+      <form id="enrollmentForm">
+        <div class="form-group">
+          <label for="student_name">Nombre del Estudiante:</label>
+          <input type="text" id="student_name" required>
+        </div>
+        
+        <div class="form-group">
+          <label for="course">Curso:</label>
+          <select id="course" required>
+            <option value="">Seleccione un curso</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="teacher">Profesor:</label>
+          <select id="teacher" required>
+            <option value="">Seleccione un profesor</option>
+          </select>
+        </div>
+        
+        <div class="form-actions">
+          <button type="submit">Registrar Matrícula</button>
+        </div>
+      </form>
+      
+      <div id="result" class="message"></div>
+    </div>
+    
+    <div class="table-container">
+      <h3>Lista de Matrículas</h3>
+      <table>
+        <thead>
+          <tr>
+            <th>Estudiante</th>
+            <th>Curso</th>
+            <th>Profesor</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="enrollmentsTableBody">
+          <tr>
+            <td colspan="4" class="loading-message">Cargando matrículas...</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  
+</body>
+</html>

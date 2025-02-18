@@ -1,34 +1,40 @@
 require('dotenv').config();
 const express = require('express');
 const mongoose = require('mongoose');
+const cors = require('cors');
 const routes = require('./routes/routes');
 
-// Inicializar express
 const app = express();
 
-// Middlewares
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Middleware setup
+app.use(express.json()); // Parse incoming JSON requests
+app.use(express.urlencoded({ extended: true })); // Parse URL-encoded data
+app.use(cors()); // Enable CORS for cross-origin requests
 
-// CORS
-app.use((req, res, next) => {
-    res.header('Access-Control-Allow-Origin', '*');
-    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
-    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
-    next();
-});
+// Load environment variables
+const PORT = process.env.PORT || 3000;
+const MONGO_URI = process.env.DATABASE_URL;
 
-// Rutas
-app.use('/api', routes);
+// Check if the database URL is set
+if (!MONGO_URI) {
+    console.error("❌ DATABASE_URL is not defined in .env");
+    process.exit(1); // Stop execution if no database URL is provided
+}
 
-// Conexión a MongoDB - versión simplificada
-const mongoString = process.env.DATABASE_URL;
-mongoose.connect(mongoString)
-    .then(() => console.log('Database Connected'))
-    .catch(error => console.log('Database Error:', error));
+// Connect to MongoDB and then start the server
+mongoose.connect(MONGO_URI)
+    .then(() => {
+        console.log('✅ Database Connected');
 
-// Servidor
-const PORT = 3000;
-app.listen(PORT, () => {
-    console.log(`Server Started at ${PORT}`);
-});
+        // Start the server only if the database connection is successful
+        app.listen(PORT, () => {
+            console.log(`🚀 Server running on port ${PORT}`);
+        });
+    })
+    .catch(error => {
+        console.error('❌ Database Connection Error:', error);
+        process.exit(1); // Stop execution if the database connection fails
+    });
+
+// Routes
+app.use('/api', routes); // Mount API routes under /api endpoint
