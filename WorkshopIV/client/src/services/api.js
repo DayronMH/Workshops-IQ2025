@@ -96,6 +96,24 @@ export const createEnrollment = async (enrollmentData) => {
     throw error;
   }
 };
+export const deleteEnrollment = async (id) => {
+  try {
+    const response = await api.delete(`/deleteEnrollment/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error('Error eliminando la matricula:', error);
+    throw error;
+  }
+};
+export const updateEnrollment = async (id, enrollmentData) => {
+  try {
+    const response = await api.put(`/updateEnrollment/${id}`, enrollmentData);
+    return response.data;
+  } catch (error) {
+    console.error('Error actualizando la matricula:', error);
+    throw error;
+  }
+};
 
 
 
